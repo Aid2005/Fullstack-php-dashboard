@@ -1,10 +1,13 @@
 <?php
     session_start();
-    // Uništi sve varijable sesije
+
+    // Clear all session variables
     session_unset();
-    // Uništi samu sesiju
+
+    // Destroy the session completely
     session_destroy();
-    // Vrati korisnika na stranicu za prijavu
+
+    // Redirect the user to the login page
     header("Location: LogIn.php");
     exit();
 ?>

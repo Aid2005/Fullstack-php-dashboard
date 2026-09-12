@@ -13,7 +13,7 @@ body {
     color: #333;
 }
 
-/* Navigacija */
+/* Top Navigation */
 .top-nav {
     background-color: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
@@ -24,7 +24,12 @@ body {
     align-items: center;
     color: white;
 }
-.nav-brand { font-size: 20px; font-weight: 700; }
+
+.nav-brand { 
+    font-size: 20px; 
+    font-weight: 700; 
+}
+
 .btn-back {
     background-color: rgba(255, 255, 255, 0.2);
     color: white;
@@ -34,9 +39,12 @@ body {
     font-weight: 600;
     transition: 0.2s ease;
 }
-.btn-back:hover { background-color: rgba(255, 255, 255, 0.3); }
 
-/* Glavni kontejner */
+.btn-back:hover { 
+    background-color: rgba(255, 255, 255, 0.3); 
+}
+
+/* Main Container */
 .main-container {
     max-width: 1100px;
     margin: 40px auto;
@@ -54,7 +62,11 @@ body {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
-h2 { color: #1e3a8a; margin-bottom: 20px; font-size: 22px; }
+h2 { 
+    color: #1e3a8a; 
+    margin-bottom: 20px; 
+    font-size: 22px; 
+}
 
 .error-alert {
     background-color: #fee2e2;
@@ -66,7 +78,7 @@ h2 { color: #1e3a8a; margin-bottom: 20px; font-size: 22px; }
     border: 1px solid #fca5a5;
 }
 
-/* Grid layout za formu (2 kolone) */
+/* Form Grid Layout (2 columns) */
 .input-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -82,7 +94,7 @@ h2 { color: #1e3a8a; margin-bottom: 20px; font-size: 22px; }
     margin-bottom: 8px;
 }
 
-/* Stil za Inpute i Select elemente */
+/* Input and Select Styles */
 .input-group input, 
 .input-group select {
     width: 100%;
@@ -107,8 +119,11 @@ h2 { color: #1e3a8a; margin-bottom: 20px; font-size: 22px; }
     cursor: not-allowed;
 }
 
-/* Dugmad */
-.form-actions { display: flex; gap: 15px; }
+/* Buttons */
+.form-actions { 
+    display: flex; 
+    gap: 15px; 
+}
 
 .btn-save, .btn-cancel, .btn-edit, .btn-delete {
     padding: 10px 20px;
@@ -121,19 +136,33 @@ h2 { color: #1e3a8a; margin-bottom: 20px; font-size: 22px; }
     font-size: 14px;
 }
 
-.btn-save { background-color: #2563eb; color: white; }
-.btn-save:hover { background-color: #1d4ed8; }
+.btn-save { 
+    background-color: #2563eb; 
+    color: white; 
+}
 
-.btn-cancel { background-color: #94a3b8; color: white; }
-.btn-cancel:hover { background-color: #64748b; }
+.btn-save:hover { 
+    background-color: #1d4ed8; 
+}
 
-/* Tabela */
-.table-responsive { overflow-x: auto; }
+.btn-cancel { 
+    background-color: #94a3b8; 
+    color: white; 
+}
+
+.btn-cancel:hover { 
+    background-color: #64748b; 
+}
+
+/* Table Styles */
+.table-responsive { 
+    overflow-x: auto; 
+}
 
 .modern-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 800px; /* Spriječava gužvanje teksta na malim ekranima */
+    min-width: 800px; /* Prevents text crowding on small screens */
 }
 
 .modern-table th, .modern-table td {
@@ -148,15 +177,34 @@ h2 { color: #1e3a8a; margin-bottom: 20px; font-size: 22px; }
     font-weight: 600;
 }
 
-.modern-table tbody tr:hover { background-color: #f1f5f9; }
+.modern-table tbody tr:hover { 
+    background-color: #f1f5f9; 
+}
 
-.action-cell { display: flex; gap: 8px; }
+.action-cell { 
+    display: flex; 
+    gap: 8px; 
+}
 
-.btn-edit { background-color: #f59e0b; color: white; padding: 6px 12px; }
-.btn-edit:hover { background-color: #d97706; }
+.btn-edit { 
+    background-color: #f59e0b; 
+    color: white; 
+    padding: 6px 12px; 
+}
 
-.btn-delete { background-color: #ef4444; color: white; padding: 6px 12px; }
-.btn-delete:hover { background-color: #dc2626; }
+.btn-edit:hover { 
+    background-color: #d97706; 
+}
+
+.btn-delete { 
+    background-color: #ef4444; 
+    color: white; 
+    padding: 6px 12px; 
+}
+
+.btn-delete:hover { 
+    background-color: #dc2626; 
+}
 
 .empty-state {
     text-align: center;

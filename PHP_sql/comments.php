@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Provjera sesije
+// Check if the admin is logged in
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header("Location: 404.php");
     exit();
@@ -9,19 +9,19 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 
 require_once 'connect.php';
 
-// --- LOGIKA ZA ODBIJANJE I PRIHVATANJE KOMENTARA ---
+// --- COMMENT MODERATION LOGIC (ACCEPT/REJECT) ---
 if (isset($_GET['action']) && isset($_GET['id'])) {
     $id = intval($_GET['id']);
     $action = $_GET['action'];
 
     if ($action === 'odbi') {
-        // Brisanje iz baze
+        // Delete the rejected comment from the database
         $stmt = $conn->prepare("DELETE FROM komentar WHERE IDK = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
         
     } elseif ($action === 'prihvati') {
-        // 1. Povuci komentar iz tabele 'komentar'
+        // 1. Fetch the comment from the pending 'komentar' table
         $stmt = $conn->prepare("SELECT * FROM komentar WHERE IDK = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
@@ -30,12 +30,12 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             
-            // 2. Prebaci ga u tabelu 'pkomentar'
+            // 2. Move it to the accepted comments table ('pkomentar')
             $insert = $conn->prepare("INSERT INTO pkomentar (IDK, SifraSeminara, Tekst, KreiranoAt) VALUES (?, ?, ?, ?)");
             $insert->bind_param("iiss", $row['IDK'], $row['SifraSeminara'], $row['Tekst'], $row['KreiranoAt']);
             
             if ($insert->execute()) {
-                // 3. Obriši iz originalne tabele 'komentar' tek kada je uspješno kopiran
+                // 3. Delete from the original table only after a successful copy
                 $del = $conn->prepare("DELETE FROM komentar WHERE IDK = ?");
                 $del->bind_param("i", $id);
                 $del->execute();
@@ -43,37 +43,37 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
         }
     }
     
-    // PRG Patern - ispravljeno na comments.php
+    // Redirect to avoid form resubmission on page refresh (PRG pattern)
     header("Location: comments.php");
     exit();
 }
 
-// --- LOGIKA ZA DODAVANJE KOMENTARA ---
+// --- ADD NEW COMMENT LOGIC ---
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sifra_seminara = intval($_POST['sifra_seminara']);
     $tekst = trim($_POST['tekst']);
-    $ocjena = $_POST['ocjena']; // 'pozitivno' ili 'negativno'
+    $ocjena = $_POST['ocjena']; 
     
-    // Mutually exclusive (nemoguce je oboje)
+    // Ensure mutually exclusive flags based on sentiment
     $pozitivno = ($ocjena === 'pozitivno') ? 1 : 0;
     $negativno = ($ocjena === 'negativno') ? 1 : 0;
-    $kreirano_at = date('Y-m-d H:i:s'); // Trenutno vrijeme
+    $kreirano_at = date('Y-m-d H:i:s'); // Current timestamp
 
     if (!empty($tekst) && $sifra_seminara > 0) {
         $stmt = $conn->prepare("INSERT INTO komentar (SifraSeminara, Tekst, Pozitivno, Negativno, KreiranoAt) VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param("issis", $sifra_seminara, $tekst, $pozitivno, $negativno, $kreirano_at);
         $stmt->execute();
         
-        // Ispravljeno na comments.php
+        // Redirect after successful insert
         header("Location: comments.php");
         exit();
     }
 }
 
-// Povlačenje seminara za padajući meni
+// Fetch seminars for the dropdown menu
 $seminars = $conn->query("SELECT SifraSeminara, NazivSeminara FROM seminar");
 
-// Povlačenje komentara za tabelu (JOIN sa seminarima da dobijemo naziv)
+// Fetch pending comments for the table (JOIN with seminar to get the seminar name)
 $sql = "SELECT k.IDK, k.Tekst, k.Pozitivno, k.Negativno, k.KreiranoAt, s.NazivSeminara 
         FROM komentar k 
         LEFT JOIN seminar s ON k.SifraSeminara = s.SifraSeminara 
@@ -87,7 +87,6 @@ $comments = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comment Moderation</title>
-    <!-- Ispravljen naziv CSS fajla na comments.css -->
     <link rel="stylesheet" href="../Style/comments.css">
 </head>
 <body>
@@ -101,11 +100,10 @@ $comments = $conn->query($sql);
 
     <main class="main-container">
         
-        <!-- FORMA ZA DODAVANJE -->
+        <!-- ADD COMMENT FORM -->
         <div class="form-card">
             <h2>Add New Comment</h2>
 
-            <!-- Ispravljeno action na comments.php -->
             <form action="comments.php" method="POST">
                 
                 <div class="input-group">
@@ -142,7 +140,7 @@ $comments = $conn->query($sql);
             </form>
         </div>
 
-        <!-- TABELA PRIKAZA -->
+        <!-- PENDING COMMENTS TABLE -->
         <div class="table-card">
             <h2>Pending Comments</h2>
             
@@ -174,7 +172,6 @@ $comments = $conn->query($sql);
                                     </td>
                                     <td><?php echo date('d.m.Y H:i', strtotime($row['KreiranoAt'])); ?></td>
                                     <td class="action-cell">
-                                        <!-- Ispravljeni linkovi na comments.php -->
                                         <a href="comments.php?action=prihvati&id=<?php echo $row['IDK']; ?>" class="btn-accept">✔ Accept</a>
                                         <a href="comments.php?action=odbi&id=<?php echo $row['IDK']; ?>" class="btn-reject" onclick="return confirm('Are you sure you want to reject and delete this comment?');">✖ Reject</a>
                                     </td>

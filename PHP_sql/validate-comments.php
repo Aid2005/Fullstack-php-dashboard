@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Provjera da li je korisnik prijavljen
+// Check if the admin is logged in
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header("Location: 404.php");
     exit();
@@ -9,7 +9,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 
 require_once 'connect.php';
 
-// Povlačenje prihvaćenih komentara i spajanje sa tabelom seminar za naziv
+// Fetch accepted comments and join with the seminar table to get the seminar name
 $sql = "SELECT pk.IDK, pk.Tekst, pk.KreiranoAt, s.NazivSeminara 
         FROM pkomentar pk 
         LEFT JOIN seminar s ON pk.SifraSeminara = s.SifraSeminara 
@@ -37,7 +37,7 @@ $result = $conn->query($sql);
 
     <main class="main-container">
         
-        <!-- TABELA PRIKAZA -->
+        <!-- ACCEPTED COMMENTS TABLE -->
         <div class="table-card">
             <h2>Published & Accepted Comments</h2>
             

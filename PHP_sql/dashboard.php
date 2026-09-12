@@ -1,14 +1,14 @@
 <?php
-// Pokretanje sesije za provjeru da li je admin prijavljen
+// Start the session to verify admin authentication
 session_start();
 
-// Ako korisnik nije prijavljen, vrati ga na stranicu za prijavu
+// Redirect to the 404 error page if the user is not logged in as admin
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header("Location: 404.php");
     exit();
 }
 
-// Preuzimanje imena prijavljenog admina za prikaz
+// Retrieve the logged-in admin's username for display purposes
 $admin_name = $_SESSION['admin_username'];
 ?>
 <!DOCTYPE html>
@@ -17,12 +17,12 @@ $admin_name = $_SESSION['admin_username'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <!-- Povezivanje modernog CSS-a -->
+    <!-- Link to the main dashboard stylesheet -->
     <link rel="stylesheet" href="../Style/dashboard.css">
 </head>
 <body>
 
-    <!-- Navigacijski bar na vrhu -->
+    <!-- Top Navigation Bar -->
     <nav class="top-nav">
         <div class="nav-brand">Admin Portal</div>
         <div class="nav-user">
@@ -31,14 +31,14 @@ $admin_name = $_SESSION['admin_username'];
         </div>
     </nav>
 
-    <!-- Glavni sadržaj sa karticama -->
+    <!-- Main Dashboard Content -->
     <main class="dashboard-container">
         <header class="dashboard-header">
             <h1>Dashboard Overview</h1>
             <p>Select a module to manage your system</p>
         </header>
 
-        <!-- Grid sa 6 kartica -->
+        <!-- Dashboard Grid with 6 module cards -->
         <div class="dashboard-grid">
             
             <a href="institute.php" class="dash-card">

@@ -13,7 +13,7 @@ body {
     color: #333;
 }
 
-/* Navigacija na vrhu */
+/* Top Navigation */
 .top-nav {
     background-color: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
@@ -78,14 +78,14 @@ body {
     font-size: 16px;
 }
 
-/* CSS Grid raspored 3x2 za 6 kartica */
+/* Dashboard Grid Layout (3x2 for 6 cards) */
 .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 25px;
 }
 
-/* Pojedinačna kartica */
+/* Individual Dashboard Card */
 .dash-card {
     background-color: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);

@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Provjera da li je korisnik prijavljen
+// Check if the admin is logged in
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header("Location: 404.php");
     exit();
@@ -12,7 +12,7 @@ require_once 'connect.php';
 $errorMessage = "";
 $successMessage = "";
 
-// --- LOGIKA ZA DODAVANJE VIJESTI ---
+// --- ADD NEWS LOGIC ---
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $naslov = trim($_POST['title']);
     $opis = trim($_POST['description']);
@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         if ($stmt->execute()) {
             $successMessage = "News successfully added!";
-            // PRG (Post/Redirect/Get) patern da sprijecimo duplo slanje forme
+            // PRG (Post/Redirect/Get) pattern to prevent duplicate form submissions
             header("Location: news.php");
             exit();
         } else {
@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Povlačenje vijesti iz baze
+// Fetch news from the database
 $sql = "SELECT ID, Naslov, Opis FROM vijest ORDER BY ID DESC";
 $result = $conn->query($sql);
 ?>
@@ -58,7 +58,7 @@ $result = $conn->query($sql);
 
     <main class="main-container">
         
-        <!-- FORMA ZA DODAVANJE -->
+        <!-- ADD NEWS FORM -->
         <div class="form-card">
             <h2>Publish New Article</h2>
 
@@ -83,7 +83,7 @@ $result = $conn->query($sql);
             </form>
         </div>
 
-        <!-- TABELA PRIKAZA -->
+        <!-- NEWS TABLE -->
         <div class="table-card">
             <h2>Published News</h2>
             
@@ -100,21 +100,21 @@ $result = $conn->query($sql);
                         </thead>
                         <tbody>
                             <?php 
-                            // Definisane alarmantne rijeci
+                            // Defined alarming words
                             $pattern = '/(napad|terorizam|borba|bojkot|bomba|izdaja|udarac|prevara|sipka|kradja|zlocudan)/iu';
 
                             while ($row = $result->fetch_assoc()): 
-                                // Prvo zastitimo text od XSS napada (pretvara <script> u bezopasan text)
+                                // First, protect the text from XSS attacks (converts <script> to safe text)
                                 $safe_opis = htmlspecialchars($row['Opis']);
                                 
-                                // Brojimo rijeci i bojimo ih u crveno
+                                // Count the alarming words and highlight them in red
                                 $count = 0;
                                 $highlighted_opis = preg_replace(
                                     $pattern, 
                                     '<span class="alarming-word">$1</span>', 
                                     $safe_opis, 
                                     -1, 
-                                    $count // Ova varijabla ce automatski dobiti broj pronadjenih rijeci
+                                    $count // This variable will automatically store the number of found words
                                 );
                             ?>
                                 <tr>
